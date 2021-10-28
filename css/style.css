@@ -1,0 +1,328 @@
+/* */
+
+@import url('https://fonts.googleapis.com/css?family=Fredoka+One&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Schoolbell&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Lato&display=swap');
+
+
+
+.form-row label {
+    margin-top: 6px;
+    margin-right: 10px;
+}
+
+.list_filter {
+    display: block;
+    margin-left: 10px !important;
+    border-color: #c4c4c4 !important;
+}
+
+
+.woocommerce-checkout-payment {
+    padding-top: 15px;
+}
+
+.srch_input,
+.srch_output {
+    margin: 6px 0 1px;
+    /*border: 1px solid grey;*/
+}
+
+.srch_output {
+    /*min-height: 100px;*/
+    position: absolute;
+}
+
+.noselect {
+  -webkit-touch-callout: none;
+    -webkit-user-select: none;
+     -khtml-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+}
+
+.ajax_select>div {
+    cursor: pointer;
+    line-height: 1.1em;
+    margin: 2px 0;
+}
+
+.ajax_select>h6 {
+    font-weight: bold;
+    font-size: 16px;
+    color: #acacac;
+    background-color: #606060;
+}
+
+.live_ajax_loader {
+    width: 30px;
+    height: 30px;
+    background-size: 30px;
+    background-image: url('https://cp.ra-solo.com.ua/img/ajax_loader.gif');
+}
+
+.list_control {
+    position: relative;
+}
+
+.list_control,
+.srch_output,
+#cty_select {
+    width: 400px;
+}
+
+.selected_rslt {
+    display: none;
+}
+
+.selected_rslt>span:first-child {
+    font-size: 12px;
+}
+.selected_rslt>span:last-child {
+    font-size: 16px;
+    border: 1px solid white;
+    padding: 6px;
+    display: none;
+    background-color: white;
+}
+
+.live_search {
+    vertical-align: top;
+    display: inline-block;
+    height:35px;
+    font-size: 18px;
+    width: 120px;
+    /*margin-bottom: 0 !important;*/
+    /*padding-bottom: 0;*/
+}
+
+.abramovka {
+    width: 50px;
+    height:35px;
+    display: inline-block;
+    margin-left: 4px;
+}
+
+.abramovka_any {
+
+    /*background-image: none;*/
+    background-image: url('https://cp.ra-solo.com.ua/img/abramovka_any.jpg');
+}
+.abramovka_beg {
+    /*background-image: none;*/
+    background-image: url('https://cp.ra-solo.com.ua/img/abramovka_beg.jpg');
+}
+
+.debug_livesrc {
+    padding: 3px;
+    z-index: 100000;
+    position: fixed;
+    top: 40px;
+    left: 30px;
+    width: 200px;
+    height: 400px;
+    background-color: yellow;
+}
+
+.ajx_change {
+    display: block;
+    width: 40px;
+    height: 40px;
+    background-image: url('https://cp.ra-solo.com.ua/img/edit_icon_round.png');
+}
+
+#cty_change_block {
+    display: none;
+}
+
+.srch_output {
+    background-color: beige;
+    z-index: 1000;
+}
+
+#pts_selected {
+    display: inline-block;
+    min-height: 30px;
+}
+
+#pts_select>div.dlvserv {
+    min-height: 30px;
+}
+
+#pts_selected,
+#pts_select div.dlvserv {
+    padding-left: 32px;
+    background-repeat: no-repeat;
+}
+
+#pts_selected.dlv,
+#pts_select div.dlv {
+    background-image: url('https://cp.ra-solo.com.ua/img/pts_icons/delivery_logo.jpg');
+}
+
+#pts_selected.np,
+#pts_select div.np {
+    background-image: url('https://cp.ra-solo.com.ua/img/pts_icons/np_logo.jpg');
+}
+
+#pts_selected.ne,
+#pts_select div.ne {
+    background-image: url('https://cp.ra-solo.com.ua/img/pts_icons/ne_logo.png');
+}
+
+#pts_selected.sat,
+#pts_select div.sat {
+    background-image: url('https://cp.ra-solo.com.ua/img/pts_icons/sat_logo.png');
+}
+
+.mandatory {
+    font-weight: bold;
+    color: #b00000;
+}
+
+p:not(.selected_ctxt).form-control {
+    padding: 6px !important;
+}
+
+p.selected_ctxt {
+    padding: 8px !important;
+    height: 54px !important;
+}
+
+.hold_anchor  {
+    pointer-events: none;
+    opacity: 0.5;
+}
+/*
+@media only screen and (min-width: 601px) {
+}
+*/
+@media only screen and (max-width: 600px) {
+    #pts_ctxt label,
+    #city_ctxt label {
+        margin-right: 20px !important;
+    }
+
+}
+
+@media only screen and (max-width: 400px) {
+    #crnt_comp_field,
+    #crnt_reg_field {
+        min-height: 100px !important;
+    }
+}
+
+/* #pts_src_block {
+    display: none;
+} */
+
+.rasolo_delvcompany_block h2 {
+    font-weight: normal;
+    font-family: 'Schoolbell', sans-serif !important;
+}
+
+.rasolo_delvcompany_block {
+    overflow: hidden;
+}
+
+#rasolo_delvcompany_block:not(.rs_free_mode) {
+    min-height: 190px;
+    /*max-height: 220px;*/
+}
+
+#rasolo_delvcompany_block.rs_free_mode {
+    min-height: 100px;
+    /*max-height: 120px;*/
+}
+
+
+
+
+#rs_emerg_delv {
+    display: none;
+}
+
+#rs_emerg_delv p.failure {
+    /*height: 20px;*/
+    margin: 10px;
+    padding: 15px 0;
+    overflow: hidden;
+    font-weight: bold;
+    color: #860000;
+}
+
+.selected_rslt label,
+.selected_rslt input {
+    display: none;
+}
+
+.data_selected {
+    font-weight: bold;
+    color: #003000;
+}
+
+#rs_emerg_delv label,
+#rs_emerg_delv input {
+    display: block;
+}
+
+#rs_emerg_delv input {
+      width: 370px;
+}
+
+label[for=free_mode_switch] {
+    min-height: 70px;
+}
+
+#free_mode_switch {
+    float: left;
+    transform: matrix(2, 0, 0, 2, 0, 0);
+    display: block;
+    margin: 10px;
+}
+
+.rs_admin_descr {
+    display: block;
+    font-style: italic;
+    padding-left: 100px;
+}
+
+#rasolo_delvcourier_block label,
+#rasolo_delvcourier_block input,
+#rasolo_delvcompany_block.rs_free_mode label,
+#rasolo_delvcompany_block.rs_free_mode input {
+    display: block;
+}
+
+#rasolo_delvcourier_block input,
+#rasolo_delvcompany_block.rs_free_mode input {
+    margin-left: 20px;
+    width: 100%;
+    max-width: 380px;
+}
+
+tr.shipping input.shipping_method~label {
+    font-weight: bold;
+    border: 1px solid #dddddd;
+    border-radius: 3px;
+    -khrml-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    padding: 5px;
+}
+
+tr.shipping input.shipping_method[checked=checked]~label {
+    border: 1px solid #b2b2b2 !important;
+    background-color: #d7fff7;
+}
+
+#customer_details textarea,
+#customer_details label,
+#customer_details p {
+    line-height: 1.1em;
+}
+
+tr.woocommerce-shipping-totals td:last-of-type {
+    min-width: 210px;
+}

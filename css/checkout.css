@@ -1,0 +1,117 @@
+/*.woocommerce-cart-form*/
+div.woocommerce button[type=submit] {
+    background-color: #bfbfbf;
+}
+
+
+div.woocommerce td,
+div.woocommerce a,
+div.woocommerce p {
+    line-height: 1.15em !important;
+}
+
+.woocommerce-billing-fields {
+    padding: 14px 0 7px;
+}
+
+#order_review_heading {
+    margin-top: 12px;
+}
+
+
+form.checkout textarea {
+    padding: 5px;
+
+}
+form.checkout p {
+    line-height: 1.2em !important;
+}
+
+.delivery_note {
+    font-weight: bold;
+    font-style: italic;
+    color: #96a6c8;
+}
+
+#shipping_method li {
+    display: block;
+    width: 100%;
+    text-align: center !important;
+    line-height: 1em !important;
+    padding-bottom: 7px !important;
+    margin: 10px 0 !important;
+
+    /*margin-right:100%;*/
+}
+/*#shipping_method label:after {*/
+    /*content: '\A';*/
+    /*white-space:pre;*/
+/*}*/
+/*#shipping_method {*/
+    /*display: block;*/
+    /*max-width: 346px;*/
+/*}*/
+
+#shipping_method input {
+    display: none;
+}
+#shipping_method label {
+    display: inline-block !important;
+    padding: 6px 6px 8px 6px !important;
+    line-height: 1.1em !important;
+}
+
+label.wc-ukr-shipping-checkbox,
+li.wc_payment_method label {
+    padding: 6px !important;
+}
+
+#shipping_method label,
+label.wc-ukr-shipping-checkbox,
+li.wc_payment_method label {
+    color: grey;
+    font-weight: bold;
+    background-color: #ddddc6;
+    border: 1px solid grey;
+    border-radius: 4px !important;
+    -webkit-border-radius:4px !important;
+    -moz-border-radius:4px !important;
+    -khtml-border-radius:4px !important;
+}
+
+.cart_net_notice span.actual_price {
+    color: #004b00;
+    font-weight: bold;
+}
+.cart_net_notice span:not(.actual_price) {
+    color: #800000;
+    font-weight: bold;
+}
+
+.cart_net_notice {
+    font-size: 12px;
+    opacity: 0.5;
+    top: -1px;
+    right: -25px;
+    position: absolute;
+}
+
+.cart_redstar {
+    margin-left: 5px;
+    display: inline-block;
+    color: red;
+    font-weight: bold;
+}
+
+
+.wc-ukr-shipping-checkbox {
+    opacity: 0.5;
+}
+
+#nova-poshta-shipping-info span.woocommerce-input-wrapper {
+    min-width: 250px;
+}
+
+.woocommerce form .form-row label {
+    line-height: 1.1em !important;
+}

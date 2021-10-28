@@ -1,0 +1,274 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WC Ukr Shipping\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: Rasolo Web Studio <support@ra-solo.com.ua>\n"
+"Language: ua\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.0\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
+
+msgid "Ra-Solo Shipping"
+msgstr "Доставка Ра-Соло"
+
+msgid "Shipping method with some delivery services"
+msgstr "Спосіб доставки з деякими службами доставки"
+
+msgid "Title"
+msgstr "Назва"
+
+msgid "Title to be displayed on site."
+msgstr "Назва для відображення на сайті."
+
+msgid "Delivery service"
+msgstr "Поштова компанія"
+
+msgid "Courier over a city"
+msgstr "Кур‘єр по місту"
+
+msgid "Cost"
+msgstr "Вартість"
+
+msgid "Enter a cost"
+msgstr "Введіть вартість"
+
+msgid "Courier Shipping"
+msgstr "Кур‘єрська доставка"
+
+msgid "Shipping method with courier"
+msgstr "Метод доставки кур‘єром"
+
+msgid "Buyer&apos;s region"
+msgstr "Регіон покупця"
+
+msgid "Choose a delivery service"
+msgstr "Оберіть службу доставки"
+
+msgid "Choose a delivery point"
+msgstr "Оберіть відділення доставки"
+
+msgid "Delivery point"
+msgstr "Відділення доставки"
+
+msgid "Please select a shipping destination"
+msgstr "Будь ласка, оберіть пункт доставки"
+
+msgid "The error has been encountered while decoding delivery destination"
+msgstr "Помилка при декодуванні адреси доставки"
+
+msgid "The severe error has been encountered while decoding delivery destination"
+msgstr "Сталася серйозна помилка під час декодування пункту призначення доставки"
+
+msgid "Point context"
+msgstr "Контекст пункту видачі"
+
+msgid "Find city"
+msgstr "Шукати місто"
+
+msgid "Find point"
+msgstr "Шукати пункт"
+
+msgid "Nova Poshta"
+msgstr "Нова Пошта"
+
+msgid "Delivery"
+msgstr "Делівери"
+
+msgid "Night Express"
+msgstr "Нічний Експрес"
+
+msgid "Select company"
+msgstr "Оберіть службу"
+
+msgid "Select delivery service"
+msgstr "Оберіть службу доставки"
+
+msgid "Such city has been selected"
+msgstr "Обране місто"
+
+msgid "Such point has been selected"
+msgstr "Обраний пункт"
+
+msgid "Delivery Service"
+msgstr "Служба доставки"
+
+msgid "Delivery Point"
+msgstr "Пункт видачі"
+
+msgid "Delivery Point Info"
+msgstr "Інформація про місце видачі"
+
+msgid "An unexpected error has occurred"
+msgstr "Сталася непередбачена помилка"
+
+msgid "Such a service does not exist or is not paid for"
+msgstr "Така послуга не існує або не сплачена"
+
+msgid "Such a city has been found"
+msgstr "Знайдено таке місто"
+
+msgid "Phone"
+msgstr "Телефон"
+
+msgid "Address"
+msgstr "Адреса"
+
+msgid "Edit"
+msgstr "Змінити"
+
+msgid "Select city"
+msgstr "Оберіть місто"
+
+msgid "Select point"
+msgstr "Оберіть пункт"
+
+msgid "Such a city has been selected"
+msgstr "Вибраний пункт"
+
+msgid "Identifier"
+msgstr "Ідентифікатор"
+
+msgid "Name"
+msgstr "Наименование"
+
+msgid "Ra-Solo Shipping options"
+msgstr "Параметри доставки «Ра-Соло»"
+
+msgid "Ra-Solo API key"
+msgstr "Ключ API «Ра-Соло»"
+
+msgid "Save changes"
+msgstr "Зберегти зміни"
+
+msgid "Server connection failure"
+msgstr "Помилка підключення до сервера"
+
+msgid "Region"
+msgstr "Регіон"
+
+msgid "Locality"
+msgstr "Населений пункт"
+
+msgid "Specify the point or office of delivery"
+msgstr "Зазначте пункт або відділення доставки"
+
+msgid "Locality, branch or parcel machine number"
+msgstr "Населений пункт, номер відділення або поштомату"
+
+msgid "Subscription status"
+msgstr "Стан передплати"
+
+msgid "Activated"
+msgstr "Активована"
+
+msgid "Inactive"
+msgstr "Не активна"
+
+msgid "last check time"
+msgstr "час останньої перевірки"
+
+msgid "the next one in a %d sec"
+msgstr "наступна за %d с"
+
+msgid "Unknown reason"
+msgstr "Невідома причина"
+
+msgid "the reason message"
+msgstr "повідомлення про причину"
+
+msgid "the reason is unknown"
+msgstr "причина не відома"
+
+msgid "The current password is absent"
+msgstr "Поточний пароль відсутній у параметрах запиту"
+
+msgid "The origin header is absent"
+msgstr "У заголовках запиту відсутні дані про джерело"
+
+msgid "The current domain name is absent"
+msgstr "Данные о доменном имени отсутствуют"
+
+msgid "There is no appropriate account for your domain"
+msgstr "Немає відповідного облікового запису для вашого домену"
+
+msgid "Payment for the service is overdue"
+msgstr "Оплата послуги прострочена"
+
+msgid "Account for your domain has not been found"
+msgstr "Обліковий запис для вашого домену не знайдено"
+
+msgid "Your password is incorrect"
+msgstr "Ваш пароль невірний"
+
+msgid "User settings for your domain are not correct"
+msgstr "Налаштування користувача для вашого домену невірні"
+
+msgid "The user account for your domain is currently locked"
+msgstr "Обліковий запис користувача для вашого домену в даний час заблоковано"
+
+msgid "The current user level is insufficient for this service"
+msgstr "Рівень поточного користувача недостатній для цієї послуги"
+
+msgid "Toggle free mode"
+msgstr "Безкоштовний режим плагіну"
+
+msgid "Enable this mode if you do not need to use the full functionality of the plugin.<br>After turning on the free mode, there will be no requests to the external server."
+msgstr "Увімкніть цей режим, якщо немає необхідності використовувати повний функціонал плагіна. Після включення безкоштовного режиму не будуть відбуватися звернення до зовнішнього сервера."
+
+msgid "Plugin functionality is limited, there are no requests to an external server."
+msgstr "Функціонал плагіна обмежений, звернення до зовнішнього серверу вимкнені."
+
+msgid "All plugin functionality is activated, there are requests to an external server."
+msgstr "Весь функціонал плагіну активовано, відбуваються звернення до зовнішнього сервера."
+
+msgid "Your changes have been saved"
+msgstr "Ваші коригування збережені"
+
+msgid "No need to save the same data"
+msgstr "Немає необхідності зберігати ті самі дані"
+
+msgid "You have to choose some shipping method"
+msgstr "Ви повинні обрати спосіб доставки"
+
+msgid "It is impossible to get the chosen shipping method"
+msgstr "Неможливо отримати обраний спосіб доставки"
+
+msgid "Please select a pick-up point"
+msgstr "Будь ласка, оберіть пункт видачі"
+
+msgid "Please specify the post-office or pick-up point for the parcel delivery"
+msgstr "Будь ласка, зазначте поштове відділення або пункт для доставлення посилки чи вантажу"
+
+msgid "Courier data"
+msgstr "Дані для кур‘єра"
+
+msgid "Specify information about the final point of courier delivery"
+msgstr "Зазначте інформацію про кінцевий пункт кур‘єрської доставки"
+
+msgid "The exact address, how to find the house, floor, lock code, etc."
+msgstr "Точна адреса, як знайти будинок, поверх, код замку та ін."
+
+msgid "Please specify courier data"
+msgstr "Будь ласка, вкажіть дані для кур‘єра"
+
+msgid "The courier data too short, type at least 10 symbols"
+msgstr "Даних для кур‘єра замало, надрукуйте хоча б 10 символів"
+
+msgid "The post-office or pick-up point specification too short, type at least 10 symbols"
+msgstr "Даних для доставки замало, надрукуйте хоча б 10 символів"
+
+msgid "Delivery information"
+msgstr "Інформація про доставку"
+
+msgid "Courier delivery information"
+msgstr "Інформація для доставки кур‘єром"
+
+msgid "Ra-Solo Delivery Company Shipping"
+msgstr "Ра-Соло: Доставка поштовою компанією"
+
+msgid "Ra-Solo Courier Shipping"
+msgstr "Ра-Соло Доставка кур‘єром"
