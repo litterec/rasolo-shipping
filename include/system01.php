@@ -9,8 +9,12 @@ function rs_shipping_load_textdomain( $mofile, $domain ) {
 //    $logic02=strpos( $mofile, WP_LANG_DIR . '/plugins/' );
 //    $logic03=false !== strpos( $mofile, WP_LANG_DIR . '/plugins/' );
     if ( RasoloShipping::$TEXTDOMAIN === $domain && false !== strpos( $mofile, WP_LANG_DIR . '/plugins/' ) ) {
+        if(function_exists('determine_locale')){
+            $locale = apply_filters( 'plugin_locale', determine_locale(), $domain );
+        } else {
+            $locale='ru_RU';
+        }
 
-        $locale = apply_filters( 'plugin_locale', determine_locale(), $domain );
 //        $mofile = WP_PLUGIN_DIR . '/' . dirname( plugin_basename( __FILE__ ) ) . '/languages/' . $domain . '-' . $locale . '.mo';
         $mofile = realpath(WP_PLUGIN_DIR . '/' . dirname( plugin_basename( __FILE__ ) ) . '/../languages').'/'. $domain . '-' . $locale . '.mo' ;
 //        myvar_dd($mofile,'$mofile');
@@ -53,3 +57,11 @@ add_action('init',function(){
     }
     define('WP_ACCESSIBLE_HOSTS','cp.ra-solo.com.ua');
 });
+
+// https://cinchws.com/woocommerce-hide-zero-value-on-zero-cost-shipping-methods/
+add_filter( 'woocommerce_cart_shipping_method_full_label', function( $label, $method ) {
+    if ( $method->cost <= 0 ) {
+        $label = $method->get_label();
+    }
+    return $label;
+}, 10, 2 );

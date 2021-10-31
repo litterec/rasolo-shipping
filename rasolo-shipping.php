@@ -37,7 +37,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
     }
     // 706483 - Kharkiv
     $city = $SxGeo->getCity($client_ip);
-
+// false &&
     if(706483==$city['city']['id']){
         require_once trailingslashit(dirname(__FILE__)).'include/courier-shipping-method.php';
     }

@@ -56,7 +56,7 @@ var ch_bttn=function (method){
 
 //document.addEventListener("click", ch_bttn(3));
 
-var attr_local='shipping_method_0_local_pickup10';
+var attr_local='shipping_method_0_local_pickup24';
 
 //var attr_np='shipping_method_0_nova_poshta_shipping5';
 var attr_np='shipping_method_0_rasolo_shipping';

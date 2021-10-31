@@ -5,7 +5,7 @@ if ( !class_exists( 'RasoloShipping' ) ) {
 	    static public $TEXTDOMAIN = 'rasolo-shipping';
 	    static public $AJAXURL = 'https://cp.ra-solo.com.ua/liveajaxsearch';
 	    static private $CAPABILITY = 'view_woocommerce_reports';
-	    static private $SUBSCRIBE_VRF_DELAY = 120;
+	    static private $SUBSCRIBE_VRF_DELAY = 12; // In seconds
 	    static private $UNREDEEMED_REASONS = array(
             792=>'The current password is absent',
             677=>'The origin header is absent',
@@ -33,7 +33,7 @@ if ( !class_exists( 'RasoloShipping' ) ) {
                 try {
                     $this_options=@unserialize($this_options);
                 } catch(Exception $e) {
-                    $this_options=array('key'=>false,'time'=>0);
+                    $this_options=array('key'=>false,'checktime'=>0);
                 }
             }
 
@@ -41,9 +41,9 @@ if ( !class_exists( 'RasoloShipping' ) ) {
                 if(!empty($this_options['key'])){
                     $this->api_key=$this_options['key'];
                 }
-                if(!empty($this_options['time']) && is_integer($this_options['time'])){
-                    $this->subsr_last_check_time=intval($this_options['time']);
-                    if($this->subsr_last_check_time>intval(time())){
+                if(!empty($this_options['checktime']) && is_integer($this_options['checktime'])){
+                    $this->subsr_last_check_time=intval($this_options['checktime']);
+                    if($this->subsr_last_check_time>intval(current_time('timestamp'))){
                         $this->subsr_last_check_time=0;
                     }
                 }
@@ -57,6 +57,12 @@ if ( !class_exists( 'RasoloShipping' ) ) {
                 if(!empty($this_options['reason'])){
                     $this->unpaid_reason=$this_options['reason'];
                 }
+                if(!empty($this_options['checktime'])){
+                    $this->subsr_last_check_time=$this_options['checktime'];
+                }
+
+//                myvar_dump($this_options,'$this_options_3234_1');
+//                myvar_dd($this,'$this_options_3234_2');
 
 //            } else {
 //                $this->save_data();
@@ -64,8 +70,6 @@ if ( !class_exists( 'RasoloShipping' ) ) {
             if(class_exists('RasoloAdminMessages')){
                 $this->msg_instance=new RasoloAdminMessages;
             };
-//            myvar_dump($this_options,'$this_options_3234_1');
-//            myvar_dd($this,'$this_options_3234_2');
 
         }
 
@@ -99,8 +103,8 @@ if ( !class_exists( 'RasoloShipping' ) ) {
 <td><?php
 //    myvar_dump($this,'$this_3423223',1);
     echo $this->is_paid_up?__( 'Activated', self::$TEXTDOMAIN ):__( 'Inactive', self::$TEXTDOMAIN );
-    echo ' ( '.__( 'last check time', self::$TEXTDOMAIN ).' '.date('H:i:s',$this->subsr_last_check_time);
-    $next_check_remain=self::$SUBSCRIBE_VRF_DELAY-(intval(time())-$this->subsr_last_check_time);
+    echo ' ( '.__( 'last check time', self::$TEXTDOMAIN ).' '.date('Y-m-d H:i:s',$this->subsr_last_check_time);
+    $next_check_remain=self::$SUBSCRIBE_VRF_DELAY-(intval(current_time('timestamp'))-$this->subsr_last_check_time);
     if($next_check_remain<0){
         $next_check_remain=1;
     }
@@ -200,12 +204,15 @@ _e( 'Enable this mode if you do not need to use the full functionality of the pl
             $this->check_paid_up();
             $arr_to_save=array();
             $arr_to_save['key']=$this->api_key;
-            $arr_to_save['time']=$this->subsr_last_check_time;
+
             if($this->is_paid_up){
                 $arr_to_save['subscribed']=$this->is_paid_up;
             }
             if($this->unpaid_reason){
                 $arr_to_save['reason']=$this->unpaid_reason;
+            }
+            if($this->subsr_last_check_time>0 || !empty($this->subsr_last_check_time)){
+                $arr_to_save['checktime']=$this->subsr_last_check_time;
             }
             if($this->free_mode){
                 $arr_to_save['freemode']=1;
@@ -284,9 +291,25 @@ _e( 'Enable this mode if you do not need to use the full functionality of the pl
         private  function check_paid_up(){
 // https://wordpress.stackexchange.com/questions/7278/how-can-you-check-if-you-are-in-a-particular-page-in-the-wp-admin-section-for-e
             global $pagenow;
-            if('options-general.php'<>$pagenow){
+            if(empty($_GET['page'])){
                 return;
             }
+            if('rasolo_shipping_options_page'<>$_GET['page']){
+                return;
+            }
+            if(current_user_can('manage_options')){
+                if('options-general.php'<>$pagenow){
+                    return;
+                }
+
+            } else if(current_user_can(self::$CAPABILITY)) {
+                if('admin.php'<>$pagenow){
+                    return;
+                }
+            } else {
+                return;
+            }
+
             if(empty($_GET['page'])){
                 return;
             }
@@ -297,15 +320,14 @@ _e( 'Enable this mode if you do not need to use the full functionality of the pl
                 return;
             }
 // May be we checked the subscription not so long ago
-            if($this->is_paid_up){
-                $time_elapsed=intval(time())-$this->subsr_last_check_time;
-                if($time_elapsed<self::$SUBSCRIBE_VRF_DELAY){
+//            if($this->is_paid_up){
+            $time_elapsed=intval(current_time('timestamp'))-intval($this->subsr_last_check_time);
+            if($time_elapsed<self::$SUBSCRIBE_VRF_DELAY){
 //                    myvar_dump('just_returning');
-                    return;
-                }
+//                    myvar_dump($time_elapsed,'$time_elapsed just_returning');
+                return;
             }
-//            sleep(3);
-//            myvar_dump('letusverify');
+//            }
             $this->is_paid_up=false;
             $this->unpaid_reason=__( 'Unknown reason', self::$TEXTDOMAIN );
 
@@ -328,7 +350,7 @@ _e( 'Enable this mode if you do not need to use the full functionality of the pl
             } catch(Exception $e) {
                 return;
             }
-//            $some_err=curl_error($curl);
+            $some_err=curl_error($curl);
             curl_close( $curl );
             if(empty($rs_postres)){
                 return;
@@ -339,13 +361,30 @@ _e( 'Enable this mode if you do not need to use the full functionality of the pl
             } catch(Exception $e) {
                 return;
             }
-            $this->subsr_last_check_time=intval(time());
+            $this->subsr_last_check_time=intval(current_time('timestamp'));
+//            sleep(1);
+            $crnt_time=current_time('timestamp');
+            $last_check_human=date('Y-m-d H:i:s',$this->subsr_last_check_time);
+            $crnt_time_human=date('Y-m-d H:i:s',$crnt_time);
+//            myvar_dump(compact('last_check_human','crnt_time','crnt_time_human'),'$crnt_time_letusverify');
+//            myvar_dump($this,'$this_letusverify');
             if(empty($res_unser['rc'])){
                 return;
             }
             if(!is_integer($res_unser['rc'])){
                 return;
             }
+//            myvar_dump($res_unser,'$res_unser_342323');
+            if(!empty($res_unser['newpassw'])){
+                $this->api_key=sanitize_text_field($res_unser['newpassw']);
+//                myvar_dump($this,'$newpasswreceivedthis_342323');
+
+//            } else {
+//                myvar_dump($this,'$newpassdidnotreceivedthis_342323');
+            }
+//            myvar_dump($this,'$this_unser_342342');
+//            myvar_dump($res_unser,'$res_unser_342342');
+
             if(200<>$res_unser['rc']){
                 if(isset(self::$UNREDEEMED_REASONS[$res_unser['rc']])){
                     $this->unpaid_reason=sanitize_text_field(trim(self::$UNREDEEMED_REASONS[$res_unser['rc']]));
@@ -356,8 +395,9 @@ _e( 'Enable this mode if you do not need to use the full functionality of the pl
 
             $this->is_paid_up=true;
             $this->unpaid_reason=false;
-//            myvar_dump($res_unser,'$res_unser_32t324t3432',1);
-//            myvar_dump($this,'$rs_postres_32t324t3432',1);
+            $this->save_data();
+//            myvar_dump($res_unser,'$res_unser_aa32t324t3432');
+//            myvar_dump($this,'$rs_postres_aa32t324t3432');
 //            myvar_dd(compact('res_unser','rs_postres','some_err'),'$rs_postres');
 
         }
