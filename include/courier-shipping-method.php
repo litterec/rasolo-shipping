@@ -51,8 +51,8 @@ function courier_shipping_method() {
             }
 
             public function calculate_shipping( $packages = array() ) {
-                global $woocommerce;
-                $carttotal = floatval($woocommerce->cart->cart_contents_total)+floatval($woocommerce->cart->tax_total);
+//                global $woocommerce;
+//                $carttotal = floatval($woocommerce->cart->cart_contents_total)+floatval($woocommerce->cart->tax_total);
 //                myvar_dd($carttotal,'$carttotal');
 //                $some_value=$this->get_field_value();
 //                foreach($packages as $nth_key=>$nth_value ){
@@ -65,6 +65,15 @@ function courier_shipping_method() {
 //                rasolo_debug_to_file($carttotal,'$carttotal_3242342');
 //                rasolo_debug_to_file($carttotal,null);
 
+                $rs_ship_inst=new RasoloShipping();
+                $dlv_cost_inst=$rs_ship_inst->get_courier_cost();
+                if(false===$dlv_cost_inst){
+                    $dlv_cost=55.;
+                } else {
+                    $dlv_cost=$dlv_cost_inst;
+                }
+
+                /*
                 $default_cost=$this->get_instance_option('cost');
                 if(empty($default_cost)){
                     $dlv_cost=0.;
@@ -77,6 +86,8 @@ function courier_shipping_method() {
                          $dlv_cost=0.;
                      }
                 }
+                */
+
 /*
                 if(class_exists('RasoloSkDiscount')){
                     $dsc=new RasoloSkDiscount();

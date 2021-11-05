@@ -6,6 +6,7 @@ if ( !class_exists( 'RasoloShipping' ) ) {
 	    static public $AJAXURL = 'https://cp.ra-solo.com.ua/liveajaxsearch';
 	    static private $CAPABILITY = 'view_woocommerce_reports';
 	    static private $SUBSCRIBE_VRF_DELAY = 12; // In seconds
+
 	    static private $UNREDEEMED_REASONS = array(
             792=>'The current password is absent',
             677=>'The origin header is absent',
@@ -19,14 +20,68 @@ if ( !class_exists( 'RasoloShipping' ) ) {
             19331=>'The current user level is insufficient for this service',
         );
 
+	    static private $ALLCITIES = array(
+            689558=>'Vinnytsya',
+            702569=>'Lutsk',
+            709930=>'Dnipro',
+            700051=>'Nikopol',
+            697889=>'Pavlohrad',
+            709717=>'Donetsk',
+            713716=>'Alchevs‘k',
+            712451=>'Berdyans‘k',
+            707753=>'Horlivka',
+            704508=>'Kramatorsk',
+            702320=>'Makiivka',
+            701822=>'Mariupol',
+            693468=>'Sloviansk',
+            686967=>'Zhytomyr',
+            690548=>'Uzhhorod',
+            687700=>'Zaporizhia',
+            701404=>'Melitopol',
+            707471=>'Ivano-Frankivs‘k',
+            703448=>'Kyiv',
+            712165=>'Bila Tserkva',
+            705812=>'Kropyvnytskyi',
+            702658=>'Luhansk',
+            691999=>'Syevyerodonets‘k',
+            702550=>'Lviv',
+            700569=>'Mykolayiv',
+            698740=>'Odesa',
+            696643=>'Poltava',
+            704147=>'Kremenchuk',
+            695594=>'Rivne',
+            692194=>'Sumy',
+            691650=>'Ternopil',
+            706483=>'Kharkiv',
+            706448=>'Kherson',
+            706369=>'Khmel‘nyts‘kyy',
+            710791=>'Cherkasy',
+            710735=>'Chernihiv',
+            710719=>'Chernivtsi',
+            694423=>'Sevastopol',
+            693805=>'Simferopol',
+            706524=>'Kerch',
+        );
+        static private $REGCITIES=array(701822,702320,694423,693805,707753,704147,712165,704508,701404,706524,700051,693468,712451,713716,697889,691999);
+
         private $api_key=false;
+        private $cart_total=false;
         private $msg_instance=false;
         private $is_paid_up=false;
         private $free_mode=false;
         private $unpaid_reason=false;
         private $subsr_last_check_time=0;
+        private $cour_thres=false;
+        private $cour_cost=false;
+        private $delv_thres=false;
+        private $delv_cost=false;
+        private $cour_cities=[];
+        private $show_reg_cities=[];
 
         function __construct(){
+
+            $this->fill_cart_total();
+
             $this_options=get_option(self::$DB_OPTIONS_KEY);
 //            myvar_dump($this_options,'$this_options_3234_22_011');
             if(!is_array($this_options)){
@@ -50,8 +105,50 @@ if ( !class_exists( 'RasoloShipping' ) ) {
                 if(!empty($this_options['subscribed'])){
                     $this->is_paid_up=true;
                 }
+
                 if(!empty($this_options['freemode'])){
                     $this->free_mode=true;
+                }
+
+                if(!empty($this_options['crrthres'])){
+                    $this->cour_thres=abs(round(floatval($this_options['crrthres']),2));
+                    if($this->cour_thres>10000000.){
+                        $this->cour_thres=10000000.;
+                    }
+                    if($this->cour_thres<0.01){
+                        $this->cour_thres=false;
+                    }
+                }
+
+                if(!empty($this_options['crrcost'])){
+                    $this->cour_cost=abs(round(floatval($this_options['crrcost']),2));
+                    if($this->cour_cost>10000000.){
+                        $this->cour_cost=10000000.;
+                    }
+                    if($this->cour_cost<0.01){
+                        $this->cour_cost=false;
+                    }
+                }
+
+                if(!empty($this_options['delvthres'])){
+                    $this->delv_thres=abs(round(floatval($this_options['delvthres']),2));
+                    if($this->delv_thres>10000000.){
+                        $this->delv_thres=10000000.;
+                    }
+                    if($this->delv_thres<0.01){
+//                        myvar_dump($this,'crrthres02');
+                        $this->delv_thres=false;
+                    }
+                }
+
+                if(!empty($this_options['delvcost'])){
+                    $this->delv_cost=abs(round(floatval($this_options['delvcost']),2));
+                    if($this->delv_cost>1000000.){
+                        $this->delv_cost=1000000.;
+                    }
+                    if($this->delv_cost<0.01){
+                        $this->delv_cost=false;
+                    }
                 }
 
                 if(!empty($this_options['reason'])){
@@ -59,6 +156,14 @@ if ( !class_exists( 'RasoloShipping' ) ) {
                 }
                 if(!empty($this_options['checktime'])){
                     $this->subsr_last_check_time=$this_options['checktime'];
+                }
+
+                if(!empty($this_options['courcities'])){
+                    $this->cour_cities=$this_options['courcities'];
+                }
+
+                if(!empty($this_options['showregcities'])){
+                    $this->show_reg_cities=true;
                 }
 
 //                myvar_dump($this_options,'$this_options_3234_1');
@@ -71,7 +176,22 @@ if ( !class_exists( 'RasoloShipping' ) ) {
                 $this->msg_instance=new RasoloAdminMessages;
             };
 
-        }
+        } // The end of __construct
+
+        private function fill_cart_total(){
+            global $woocommerce;
+            if(false===$this->cart_total){
+                if(is_object($woocommerce)){
+                    if(is_object($woocommerce->cart )){
+                        $carttotal = floatval($woocommerce->cart->cart_contents_total)+floatval($woocommerce->cart->tax_total);
+                        if(abs($carttotal)>0.01){
+                            $this->cart_total=$carttotal;
+                        }
+                    }
+                }
+            }
+
+        } // The end of fill_cart_total
 
         public function admin_options_page(){
             if(!self::verify_user_access('from01')){
@@ -121,12 +241,9 @@ if ( !class_exists( 'RasoloShipping' ) ) {
     ?></td>
 </tr>
 <tr
-
 <?php
-
-echo $this->free_mode?' title="'.__('Plugin functionality is limited, there are no requests to an external server.', self::$TEXTDOMAIN).'"':' title="'.__('All plugin functionality is activated, there are requests to an external server.', self::$TEXTDOMAIN).'"';
+    echo $this->free_mode?' title="'.__('Plugin functionality is limited, there are no requests to an external server.', self::$TEXTDOMAIN).'"':' title="'.__('All plugin functionality is activated, there are requests to an external server.', self::$TEXTDOMAIN).'"';
 ?>
-
     >
 <th scope="row"><?php
     _e( 'Toggle free mode', self::$TEXTDOMAIN );
@@ -136,13 +253,149 @@ echo $this->free_mode?' title="'.__('Plugin functionality is limited, there are 
 echo $this->free_mode?' checked="checked"':'';
 
     ?> ></label>
-    <span class="rs_admin_descr"><?php
+    <span class="rs_admin_descr rs_admin_checkbox_descr"><?php
 _e( 'Enable this mode if you do not need to use the full functionality of the plugin.<br>After turning on the free mode, there will be no requests to the external server.', self::$TEXTDOMAIN )
 
     ?></span>
 
     </td>
+</tr><tr>
+<th scope="row"><?php
+    _e( 'Courier free delivery threshold', self::$TEXTDOMAIN );
+    ?></th>
+<td><label for="crrthres"><input
+            min="0.0" max="1000000.0" class="admin_float"
+            type="number" step="0.01" name="crrthres" id="crrthres"
+ value="<?php
+    echo round($this->cour_thres,2);
+    ?>"
+            /></label>     <span class="rs_admin_descr rs_admin_float_descr"><?php
+_e( 'If the buyer puts goods to the cart for an amount greater or exceeding<br> the specified threshold, he receives free courier delivery.', self::$TEXTDOMAIN )
+
+    ?></span>
+<?php
+?></td>
+</tr><tr>
+<th scope="row"><?php
+    _e( 'Courier delivery cost', self::$TEXTDOMAIN );
+    ?></th>
+<td><label for="crrcost"><input
+            min="0.0" max="1000000.0" class="admin_float"
+            type="number" step="0.01" name="crrcost" id="crrcost"
+ value="<?php
+    echo round($this->cour_cost,2);
+    ?>"
+            /></label>     <span class="rs_admin_descr rs_admin_float_descr"><?php
+_e( 'The specified cost of delivery by courier will be included in the order amount,<br> if the purchase amount does not exceed the threshold value.', self::$TEXTDOMAIN )
+
+    ?></span>
+<?php
+?></td>
 </tr>
+<tr>
+<th scope="row"><?php
+    _e( 'Postal company free delivery threshold', self::$TEXTDOMAIN );
+    ?></th>
+<td><label for="delvthres"><input
+            min="0.0" max="1000000.0" class="admin_float"
+            type="number" step="0.01" name="delvthres" id="delvthres"
+ value="<?php
+    echo round($this->delv_thres,2);
+    ?>"
+            /></label>     <span class="rs_admin_descr rs_admin_float_descr"><?php
+_e( 'If the buyer puts products to the cart for an amount greater than or exceeding<br> the specified threshold, he will receive free shipping by the postal company.', self::$TEXTDOMAIN )
+
+    ?></span>
+<?php
+?></td>
+</tr><tr>
+<th scope="row"><?php
+    _e( 'Postal company shipping cost', self::$TEXTDOMAIN );
+    ?></th>
+<td><label for="delvcost"><input
+            min="0.0" max="1000000.0" class="admin_float"
+            type="number" step="0.01" name="delvcost" id="delvcost"
+ value="<?php
+    echo round($this->delv_cost,2);
+    ?>"
+            /></label>     <span class="rs_admin_descr rs_admin_float_descr"><?php
+_e( 'The specified cost of delivery by the postal company will be included in the order amount,<br> if the purchase amount does not exceed the threshold value.', self::$TEXTDOMAIN )
+    ?></span>
+<?php
+?></td>
+</tr>
+
+
+
+
+
+<tr>
+<th scope="row"><?php
+    _e( 'Courier delivery cities', self::$TEXTDOMAIN );
+    ?>
+   <div class="rs_admin_cts_descr"> <label
+ id="admin_reg_switch" class="admin_float" for="showregcities"><input
+ type="checkbox" id="showregcities"
+ <?php if($this->show_reg_cities){
+ echo ' checked="checked"';
+ }
+ ?>
+ name="showregcities"><?php
+    _e( 'More cities', self::$TEXTDOMAIN );
+    ?></label></div>
+</th>
+<td><?php
+
+    foreach(self::$ALLCITIES as $nth_key=>$nth_cty){
+        $cty_translated=__($nth_cty,self::$TEXTDOMAIN);
+        $is_reg_cty=in_array($nth_key,self::$REGCITIES);
+        if(!$this->show_reg_cities && $is_reg_cty){
+            continue;
+        }
+
+    ?> <label class="admin_float admin_cty<?php
+        if($is_reg_cty){
+            echo ' admin_reg_cty';
+        }
+        ?>" for="cty<?php echo $nth_key; ?>"><input
+
+<?php
+if(in_array($nth_key,$this->cour_cities)){
+    echo ' checked="checked" ';
+}
+?>
+
+            type="checkbox" name="courcities[<?php
+            echo $nth_key;
+            ?>]" id="cty<?php echo $nth_key; ?>"
+ value="<?php
+ if(in_array($nth_key,$this->cour_cities)){
+     ?> checked="checked" <?php
+ }
+    ?>"
+            /> <?php
+            echo $cty_translated;
+            ?></label> <?php
+
+
+    } // The end of foreach self::$ALLCITIES
+
+
+
+    ?>    <div class="rs_admin_cts_descr"><?php
+_e( 'Select the cities in which your company will provide the purchase courier delivery', self::$TEXTDOMAIN )
+    ?></div>
+<?php
+?></td>
+</tr>
+
+
+
+
+
+
+
+
 </table>
 <p class="submit"><input type="submit" name="submit" id="submit"
  class="button button-primary" value="<?php
@@ -211,6 +464,27 @@ _e( 'Enable this mode if you do not need to use the full functionality of the pl
             if($this->unpaid_reason){
                 $arr_to_save['reason']=$this->unpaid_reason;
             }
+            if($this->cour_thres){
+                $arr_to_save['crrthres']=round($this->cour_thres,2);
+            }
+            if($this->cour_cost){
+                $arr_to_save['crrcost']=round($this->cour_cost,2);
+            }
+            if($this->delv_thres){
+                $arr_to_save['delvthres']=round($this->delv_thres,2);
+            }
+            if($this->delv_cost){
+                $arr_to_save['delvcost']=round($this->delv_cost,2);
+            }
+
+            if($this->show_reg_cities){
+                $arr_to_save['showregcities']=true;
+            }
+
+            if(!empty($this->cour_cities)){
+                $arr_to_save['courcities']=$this->cour_cities;
+            }
+
             if($this->subsr_last_check_time>0 || !empty($this->subsr_last_check_time)){
                 $arr_to_save['checktime']=$this->subsr_last_check_time;
             }
@@ -232,6 +506,7 @@ _e( 'Enable this mode if you do not need to use the full functionality of the pl
 //                myvar_dd($this,'free_mode_switch_not_empty19');
 //            }
 
+//            myvar_dump($debug_from,'$debug_from_323423234_1');
 //            myvar_dump($arr_to_save,'$arr_to_save_323423234_1');
 //            myvar_dd($this,'$this_323423234_1');
         }
@@ -244,19 +519,110 @@ _e( 'Enable this mode if you do not need to use the full functionality of the pl
                 return;
             }
             $need_save=false;
+            $debug_arr=[];
 
             if(!empty($_POST['rs_api_key'])){
                 $new_key_val=sanitize_text_field($_POST['rs_api_key']);
                 if($new_key_val<>$this->api_key){
                     $need_save=true;
+                    $debug_arr[]=1;
                     $this->api_key=$new_key_val;
                 }
             }
+
+            if(!empty($_POST['crrthres'])){
+                $crr_thres=sanitize_text_field($_POST['crrthres']);
+//                myvar_dump($this,'crrthres01');
+                if(!empty($crr_thres)){
+                    $crr_tth_float=round(floatval($crr_thres),2);
+//                    myvar_dump($crr_tth_float,'$crr_tth_float02');
+//                    myvar_dump($this,'crrthres02');
+                    if($crr_tth_float>=0.01){
+                        if(abs(floatval($this->cour_thres)-$crr_tth_float)>=0.01){
+                            $this->cour_thres=$crr_tth_float;
+                            $debug_arr[]=2;
+                            $need_save=true;
+                        }
+//                        myvar_dump($crr_tth_float,'$crr_tth_float03');
+//                        myvar_dump($this,'crrthres03_01');
+
+                    }
+                }
+
+            } else {
+                if(!empty($this->cour_thres)){
+                    $need_save=true;
+                }
+                $this->cour_thres=false;
+            }
+
+            if(!empty($_POST['crrcost'])){
+                $crr_cost=sanitize_text_field($_POST['crrcost']);
+                if(!empty($crr_cost)){
+                    $crr_cost_float=round(floatval($crr_cost),2);
+                    if($crr_cost_float>=0.01){
+                        if(abs(floatval($this->cour_cost)-$crr_cost_float)>=0.01){
+                            $this->cour_cost=$crr_cost_float;
+                            $need_save=true;
+                            $debug_arr[]=3;
+                        }
+                    }
+                }
+            } else {
+                if(!empty($this->cour_cost)){
+                    $need_save=true;
+                    $debug_arr[]=4;
+                }
+                $this->cour_cost=false;
+            }
+
+            if(!empty($_POST['delvthres'])){
+                $delv_thres=sanitize_text_field($_POST['delvthres']);
+                if(!empty($delv_thres)){
+                    $delv_thres_float=round(floatval($delv_thres),2);
+                    if($delv_thres_float>=0.01){
+                        if(abs(floatval($this->delv_thres)-$delv_thres_float)>=0.01){
+                            $this->delv_thres=$delv_thres_float;
+                            $need_save=true;
+                            $debug_arr[]=5;
+                        }
+                    }
+                }
+            } else {
+                if(!empty($this->delv_thres)){
+                    $need_save=true;
+                    $debug_arr[]=6;
+                }
+                $this->delv_thres=false;
+            }
+
+            if(!empty($_POST['delvcost'])){
+                $delv_cost=sanitize_text_field($_POST['delvcost']);
+                if(!empty($delv_cost)){
+                    $delv_cost_float=round(floatval($delv_cost),2);
+                    if($delv_cost_float>=0.01){
+                        if(abs(floatval($this->delv_cost)-$delv_cost_float)>=0.01){
+                            $this->delv_cost=$delv_cost_float;
+                            $need_save=true;
+                            $debug_arr[]=7;
+                        }
+                    }
+                }
+            } else {
+                if(!empty($this->delv_cost)){
+                    $need_save=true;
+                    $debug_arr[]=8;
+                }
+                $this->delv_cost=false;
+            }
+
+//            myvar_dump($this,'crrthres04');
 
             if(empty($_POST['free_mode_switch'])){
 //                myvar_dd($_POST,'free_mode_switch_is_empty');
                 if($this->free_mode){
                     $need_save=true;
+                    $debug_arr[]=9;
                 }
                 $this->free_mode=false;
             } else {
@@ -264,14 +630,56 @@ _e( 'Enable this mode if you do not need to use the full functionality of the pl
                 if(!$this->free_mode){
 //                    myvar_dump($_POST,'free_mode_switch_not_empty2');
                     $need_save=true;
+                    $debug_arr[]=10;
                 }
 
                 $this->free_mode=true;
 //                myvar_dump($this,'free_mode_switch_not_empty3');
             }
+
+            if(empty($_POST['showregcities'])){
+//                myvar_dd($_POST,'free_mode_switch_is_empty');
+                if($this->show_reg_cities){
+                    $need_save=true;
+                    $debug_arr[]=11;
+                }
+                $this->show_reg_cities=false;
+            } else {
+                if(!$this->show_reg_cities){
+//                    myvar_dump($_POST,'free_mode_switch_not_empty2');
+                    $need_save=true;
+                    $debug_arr[]=12;
+                }
+
+                $this->show_reg_cities=true;
+//                myvar_dump($this,'free_mode_switch_not_empty3');
+            }
+
+            if( !empty($_POST['courcities']) && is_array($_POST['courcities']) ){
+//                $arr_keys=array_keys($_POST['courcities']);
+//                myvar_dump($arr_keys,'$arr_keys_34525235');
+//                myvar_dump($this,'free_mode_switch_not_empty_34525235');
+//                myvar_dd($_POST,'free_mode_switch_not_empty_34525235');
+                $old_courcities=$this->cour_cities;
+                $this->cour_cities=array();
+                foreach($_POST['courcities'] as $cty_key=>$nth_cty_code){
+                    $code_sanitized=intval($cty_key);
+                    if(empty(self::$ALLCITIES[$code_sanitized])){
+                        continue;
+                    }
+                    $this->cour_cities[]=$code_sanitized;
+                }
+                if(count($old_courcities) != count($this->cour_cities) || array_diff($old_courcities, $this->cour_cities) !== array_diff($this->cour_cities, $old_courcities)){
+                    $need_save=true;
+                    $debug_arr[]=13;
+//                    $debug_arr['a13']=count($old_courcities);
+                }
+            }
+
             if($need_save){
 //                myvar_dump($this,'free_mode_switch_not_empty4');
                 $this->save_data('processpost');
+//                myvar_dump($this,'crrthres06_01');
                 $this->put_adm_message(__('Your changes have been saved',self::$TEXTDOMAIN));
             } else {
 //                myvar_dd($this,'free_mode_switch_not_empty6');
@@ -279,9 +687,8 @@ _e( 'Enable this mode if you do not need to use the full functionality of the pl
                     $this->put_adm_message(__('No need to save the same data',self::$TEXTDOMAIN));
                 }
             }
-
-
-//            myvar_dd($this,'er3r3eg_3234');
+//            myvar_dump($debug_arr,'$debug_arr07_01');
+//            myvar_dd($this,'crrthres07_01');
 
         } // The end of after_setup_theme
 
@@ -405,6 +812,134 @@ _e( 'Enable this mode if you do not need to use the full functionality of the pl
         public function is_free_mode(){
             return $this->free_mode;
         }
+
+        public function get_courier_cost(){
+            $this->fill_cart_total();
+            if(false===$this->cart_total){
+                return 109.;
+            }
+
+            if(false===$this->cour_thres){
+                return 110.;
+            }
+
+            if($this->cart_total>=$this->cour_thres){
+                return 111.;
+            } else {
+                return $this->cour_cost;
+            }
+        } // The end of courier_cost
+
+        public function get_delv_cost(){
+            $this->fill_cart_total();
+            if(false===$this->cart_total){
+                return false;
+            }
+
+            if(false===$this->delv_thres){
+                return false;
+            }
+
+            if($this->cart_total>=$this->delv_thres){
+                return false;
+            } else {
+                return $this->delv_cost;
+            }
+        } // The end of courier_cost
+
+        public function is_city_courier($cty_code){
+            return in_array($cty_code,$this->cour_cities);
+        }
+
+        public function woocommerce_before_checkout_form(){
+            $this->echo_dsc_msg();
+        } // The end of woocommerce_before_checkout_form
+
+        public function woocommerce_before_cart(){
+            $this->echo_dsc_msg();
+        } // The end of woocommerce_before_cart
+
+        private function echo_dsc_msg(){
+
+            // There is the  local_pickup:24 method lavel
+            $method_id=strval(WC()->session->get( 'chosen_shipping_methods' )[0]);
+            if('rasolo_shipping'==$method_id){
+                if(false===$this->delv_cost){
+                    return;
+                }
+                if(false===$this->delv_thres){
+                    return;
+                }
+                $this->fill_cart_total();
+                if(false===$this->cart_total){
+                    return;
+                }
+                if($this->cart_total<0.01){
+                    wc_print_notice(
+                        sprintf(
+                        __('Get free delivery by the postal company – purchase products for the amount of% s UAH.', self::$TEXTDOMAIN )
+                            ,strval($this->delv_thres))
+                        , 'notice' );
+                    return;
+                }
+                if($this->cart_total<$this->delv_thres){
+                    $cart_diff=$this->delv_thres-$this->cart_total;
+                    wc_print_notice(
+                        sprintf(
+                        __('Add another %s UAH to your cart and get free shipping by postal company.', self::$TEXTDOMAIN )
+                            ,strval($cart_diff))
+                        , 'notice' );
+                    return;
+                }
+
+                wc_print_notice(
+                        sprintf(
+                        __('Your purchase will be delivered free of charge by the postal company, since the order amount has reached %s UAH.', self::$TEXTDOMAIN )
+                            ,strval($this->delv_thres))
+                        , 'notice' );
+                    return;
+
+            } else if('rasolo_courier'==$method_id) {
+                if(false===$this->cour_cost){
+                    return;
+                }
+                if(false===$this->cour_thres){
+                    return;
+                }
+                $this->fill_cart_total();
+                if(false===$this->cart_total){
+                    return;
+                }
+
+                if($this->cart_total<0.01){
+                    wc_print_notice(
+                        sprintf(
+                        __('Get free delivery by courier – purchase products for the amount of %s UAH.', self::$TEXTDOMAIN )
+                            ,strval($this->cour_thres))
+                        , 'notice' );
+                    return;
+                }
+                if($this->cart_total<$this->cour_thres){
+                    $cart_diff=$this->cour_thres-$this->cart_total;
+                    wc_print_notice(
+                        sprintf(
+                        __('Add another %s UAH to your cart and get free courier delivery.', self::$TEXTDOMAIN )
+                            ,strval($cart_diff))
+                        , 'notice' );
+                    return;
+                }
+
+                wc_print_notice(
+                        sprintf(
+                        __('Your purchase will be delivered free of charge by courier, since the order amount has reached %s UAH.', self::$TEXTDOMAIN )
+                            ,strval($this->cour_thres))
+                        , 'notice' );
+                    return;
+
+            }
+
+        } // The end of echo_dsc_msg
+
 
     }
 }

@@ -15,6 +15,8 @@ class RsBootstrapDlv {
     $possible_hooks[]='edit_user_profile_update';
     $possible_hooks[]='rs_wc_edit_account_form';
     $possible_hooks[]='woocommerce_save_account_details';
+    $possible_hooks[]='woocommerce_before_checkout_form';
+    $possible_hooks[]='woocommerce_before_cart';
     array_map( function( $hook ) {
 //        $my_plugin=$this->plugin;
 //        $is_exist=method_exists( $this->plugin, $hook );

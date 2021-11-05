@@ -53,8 +53,8 @@ function rasolo_shipping_method() {
             }
 
             public function calculate_shipping( $packages = array() ) {
-                global $woocommerce;
-                $carttotal = floatval($woocommerce->cart->cart_contents_total)+floatval($woocommerce->cart->tax_total);
+//                global $woocommerce;
+//                $carttotal = floatval($woocommerce->cart->cart_contents_total)+floatval($woocommerce->cart->tax_total);
 //                myvar_dd($carttotal,'$carttotal');
 //                rasolo_debug_to_file($carttotal,'$carttotal');
 
@@ -63,7 +63,9 @@ function rasolo_shipping_method() {
 //                $dlv_cost=$dsc->get_deliv_cost();
 //                rasolo_debug_to_file($dlv_cost,'$dlv_cost');
 
-                $dlv_cost=0.;
+//                $rs_ship_inst=new RasoloShipping();
+//                $dlv_cost=$rs_ship_inst->get_delv_cost();
+                $dlv_cost=44.;
 /*
                 if($carttotal <5.){
                     $dlv_cost = 10.;
@@ -80,7 +82,7 @@ function rasolo_shipping_method() {
                 }
 */
 //                    $dlv_cost=rand(20,99);
-                $dlv_cost='0';
+//                $dlv_cost='0';
                 $rate = array(
                     'id'       => $this->id,
                     'label'    => $this->title,

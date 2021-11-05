@@ -272,3 +272,174 @@ msgstr "Ра-Соло: Доставка поштовою компанією"
 
 msgid "Ra-Solo Courier Shipping"
 msgstr "Ра-Соло Доставка кур‘єром"
+
+msgid "Courier free delivery threshold"
+msgstr "Поріг мінімальної доставки кур‘єром"
+
+msgid "If the buyer puts goods to the cart for an amount greater or exceeding<br> the specified threshold, he receives free courier delivery."
+msgstr "Якщо покупець покладе в кошик товари на суму, більшу або перевищує<br> зазначений поріг, він отримує безкоштовну доставку кур‘єром."
+
+msgid "Courier delivery cost"
+msgstr "Вартість доставки кур‘єром"
+
+msgid "The specified cost of delivery by courier will be included in the order amount,<br> if the purchase amount does not exceed the threshold value."
+msgstr "До загальної суми буде додана зазначена вартість доставки кур‘єром, якщо сума замовлення не перевищує порогове значення."
+
+msgid "Postal company free delivery threshold"
+msgstr "Поріг мінімальної доставки поштовою компанією"
+
+msgid "If the buyer puts products to the cart for an amount greater than or exceeding<br> the specified threshold, he will receive free shipping by the postal company."
+msgstr "Якщо покупець покладе в кошик товари на суму, більшу або перевищує<br> зазначений поріг, він отримує безкоштовну доставку поштовою компанією."
+
+msgid "Postal company shipping cost"
+msgstr "Вартість доставки поштовою компанією"
+
+msgid "The specified cost of delivery by the postal company will be included in the order amount,<br> if the purchase amount does not exceed the threshold value."
+msgstr "До загальної суми буде додана зазначена вартість доставки поштовою компанією,<br> якщо сума замовлення не перевищує порогове значення."
+
+msgid "Courier delivery cities"
+msgstr "Міста кур‘єрської доставки"
+
+msgid "Select the cities in which your company will provide the purchase courier delivery"
+msgstr "Оберіть міста, в яких ваша компанія здійснюватиме кур‘єрську доставку замовлення"
+
+msgid "More cities"
+msgstr "Більше міст"
+
+msgid "Vinnytsya"
+msgstr "Вінниця"
+
+msgid "Lutsk"
+msgstr "Луцьк"
+
+msgid "Dnipro"
+msgstr "Дніпро"
+
+msgid "Donetsk"
+msgstr "Донецьк"
+
+msgid "Zhytomyr"
+msgstr "Житомир"
+
+msgid "Uzhhorod"
+msgstr "Ужгород"
+
+msgid "Zaporizhia"
+msgstr "Запоріжжя"
+
+msgid "Ivano-Frankivs‘k"
+msgstr "Івано-Франківськ"
+
+msgid "Kyiv"
+msgstr "Київ"
+
+msgid "Kropyvnytskyi"
+msgstr "Кропивницький"
+
+msgid "Luhansk"
+msgstr "Луганськ"
+
+msgid "Lviv"
+msgstr "Львів"
+
+msgid "Mykolayiv"
+msgstr "Миколаїв"
+
+msgid "Odesa"
+msgstr "Одеса"
+
+msgid "Poltava"
+msgstr "Полтава"
+
+msgid "Rivne"
+msgstr "Рівне"
+
+msgid "Sumy"
+msgstr "Суми"
+
+msgid "Ternopil"
+msgstr "Тернопіль"
+
+msgid "Kharkiv"
+msgstr "Харків"
+
+msgid "Kherson"
+msgstr "Херсон"
+
+msgid "Khmel‘nyts‘kyy"
+msgstr "Хмельницький"
+
+msgid "Cherkasy"
+msgstr "Черкаси"
+
+msgid "Chernihiv"
+msgstr "Чернігів"
+
+msgid "Chernivtsi"
+msgstr "Чернівці"
+
+msgid "Mariupol"
+msgstr "Маріуполь"
+
+msgid "Makiivka"
+msgstr "Макіївка"
+
+msgid "Sevastopol"
+msgstr "Севастополь"
+
+msgid "Simferopol"
+msgstr "Сімферополь"
+
+msgid "Horlivka"
+msgstr "Горлівка"
+
+msgid "Kremenchuk"
+msgstr "Кременчук"
+
+msgid "Bila Tserkva"
+msgstr "Біла Церква"
+
+msgid "Kramatorsk"
+msgstr "Краматорьск"
+
+msgid "Melitopol"
+msgstr "Мелітополь"
+
+msgid "Kerch"
+msgstr "Керч"
+
+msgid "Nikopol"
+msgstr "Нїкополь"
+
+msgid "Sloviansk"
+msgstr "Слов‘янськ"
+
+msgid "Berdyans‘k"
+msgstr "Бердянськ"
+
+msgid "Alchevs‘k"
+msgstr "Алчевськ"
+
+msgid "Pavlohrad"
+msgstr "Павлоград"
+
+msgid "Syevyerodonets‘k"
+msgstr "Сєвєродонецьк"
+
+msgid "Get free delivery by courier – purchase products for the amount of %s UAH."
+msgstr "Отримайте безкоштовну доставку кур‘єром – придбайте товари на суму %s грн."
+
+msgid "Add another %s UAH to your cart and get free courier delivery."
+msgstr "Додайте в кошик товарів ще на суму %s грн та отримайте безкоштовну доставку кур‘єром."
+
+msgid "Your purchase will be delivered free of charge by courier, since the order amount has reached %s UAH."
+msgstr "Ваша покупка буде безкоштовно доправлена кур‘єром, оскільки сума замовлення сягнула розміру %s грн."
+
+msgid "Get free delivery by the postal company – purchase products for the amount of% s UAH."
+msgstr "Отримайте безкоштовну доставку поштовою компанією – придбайте товари на суму від %s грн."
+
+msgid "Add another %s UAH to your cart and get free shipping by postal company."
+msgstr "Додайте в кошик товарів ще на суму %s та отримайте безкоштовну доставку поштовою компанією."
+
+msgid "Your purchase will be delivered free of charge by the postal company, since the order amount has reached %s UAH."
+msgstr "Ваша покупка буде безкоштовно доправлена поштовою компанією, оскільки сума замовлення сягнула розміру %s грн."

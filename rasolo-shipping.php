@@ -35,12 +35,18 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
     } else  {
         $client_ip ='192.168.0.1';
     }
-    // 706483 - Kharkiv
+    // 706483 - Kharkiv https://www.grid.ac/institutes/grid.495173.d
+    // https://dateandtime.info/ru/citycoordinates.php?id=698740
     $city = $SxGeo->getCity($client_ip);
-// false &&
-    if(706483==$city['city']['id']){
-        require_once trailingslashit(dirname(__FILE__)).'include/courier-shipping-method.php';
+    $rs_shipping=new RasoloShipping();
+    if(is_array($city) && !empty($city['city']) && !empty($city['city']['id'])){
+        if($rs_shipping->is_city_courier($city['city']['id'])){
+            require_once trailingslashit(dirname(__FILE__)).'include/courier-shipping-method.php';
+        };
     }
+// false &&
+//    if(706483==$city['city']['id']){
+//    }
 
     require_once trailingslashit(dirname(__FILE__)).'include/system01.php';
     require_once trailingslashit(dirname(__FILE__)).'include/js_background.php';
@@ -48,7 +54,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
     require_once trailingslashit(dirname(__FILE__)).'include/class-rs-bootstrap.php';
 
 
-    $rs_shipping=new RasoloShipping();
+
     add_action( 'plugins_loaded', [new RsBootstrapDlv( $rs_shipping ), 'plugins_loaded' ], 0 );
 
 
